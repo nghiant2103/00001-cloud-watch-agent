@@ -1,0 +1,113 @@
+[
+{
+	"uri": "/",
+	"title": "CloudWatch Agent",
+	"tags": [],
+	"description": "",
+	"content": "Configure Amazon CloudWatch Agent Overall In this workshop, you will explore fundamental concepts and learn how to configure the Amazon CloudWatch Agent to collect high-resolution logs and metrics from EC2 instances. Afterward, you will use CloudWatch to monitor the collected data and logs.\nContent Introduction Preparation Install and configure CloudWatch Agent on EC2 Configure high-resolution metrics Monitor and analysis in CloudWatch Clean up resources "
+},
+{
+	"uri": "/2-preparation/2.1-create-vpc/",
+	"title": "Create VPC",
+	"tags": [],
+	"description": "",
+	"content": "Create VPC cw-agent-vpc Go to VPC service management console Click Your VPC. Click Create VPC. At the Create VPC page. In the Name tag field, enter cw-agent-vpc. In the IPv4 CIDR field, enter 10.0.0.0/16. Click Create VPC. Next step we will create the subnet in VPC.\n"
+},
+{
+	"uri": "/3-install-config-cwagent/3.1-install-cwagent/",
+	"title": "Install CloudWatch Agent",
+	"tags": [],
+	"description": "",
+	"content": "1. Connect to your EC2 Instance Use the private key associated with your EC2 instance to connect via SSH. Replace your-ec2-instance-public-ip with the public IP address or DNS of your EC2 instance and your-private-key.pem with the path to your private key file:\nssh -i \u0026#34;your-private-key.pem\u0026#34; ec2-user@your-ec2-instance-public-ip 2. Download the CloudWatch Agent Update the package manager on your EC2 instance\nsudo yum update -y Download the CloudWatch Agent package using the following command:\nsudo wget https://s3.amazonaws.com/amazoncloudwatch-agent/amazon_linux/amd64/latest/amazon-cloudwatch-agent.rpm 3. Install the CloudWatch Agent sudo rpm -U ./amazon-cloudwatch-agent.rpm Next step we will configuring Cloudwatch Agent in EC2 instance.\n"
+},
+{
+	"uri": "/1-introduce/",
+	"title": "Introduction",
+	"tags": [],
+	"description": "",
+	"content": "CloudWatch Agent CloudWatch Agent is a software package that autonomously and continuously runs on your servers. Using CloudWatch Agent, we can collect metrics and logs from Amazon Elastic Compute Cloud (Amazon EC2), hybrid, and on-premises servers running both Linux and Windows. CloudWatch Agent provides access to more system level and in-guest metrics, in addition to host metrics already provided by Amazon EC2. The agent also lets us collect, aggregate, and summarize metrics and logs from containerized applications and microservices.\nCloudWatch Agent supports a modular plugin model that developers can leverage to extend the core agent framework.\nMetrics and logs are sent to Amazon CloudWatch for storage and monitoring. The CloudWatch Agent enables additional insight into workloads by capturing OS- and application-specific metrics and logs. In CloudWatch, we can create custom dashboards, create alarms that performs actions, and troubleshoot issues using Amazon CloudWatch Logs.\nHigh-resolution metrics Each metric is one of the following:\nStandard resolution, with data having a one-minute granularity\nHigh resolution, with data at a granularity of one second\nMetrics produced by AWS services are standard resolution by default. When you publish a custom metric, you can define it as either standard resolution or high resolution. When you publish a high-resolution metric, CloudWatch stores it with a resolution of 1 second, and you can read and retrieve it with a period of 1 second, 5 seconds, 10 seconds, 30 seconds, or any multiple of 60 seconds.\nHigh-resolution metrics can give you more immediate insight into your application\u0026rsquo;s sub-minute activity. Keep in mind that every PutMetricData call for a custom metric is charged, so calling PutMetricData more often on a high-resolution metric can lead to higher charges. For more information about CloudWatch pricing, see Amazon CloudWatch Pricing.\nIf you set an alarm on a high-resolution metric, you can specify a high-resolution alarm with a period of 10 seconds or 30 seconds, or you can set a regular alarm with a period of any multiple of 60 seconds. There is a higher charge for high-resolution alarms with a period of 10 or 30 seconds.\n"
+},
+{
+	"uri": "/3-install-config-cwagent/3.2-config-cwagent/",
+	"title": "Config CloudWatch Agent",
+	"tags": [],
+	"description": "",
+	"content": "\rIf you saved the configuration file on the local computer, enter the following command. Replace configuration-file-path with the path to the agent configuration file. This file is called config.json if you created it with the wizard, and might be called amazon-cloudwatch-agent.json if you created it manually.\n1. Create the CloudWatch Agent configuration file Create the CloudWatch Agent configuration file using your preferred text editor.\nsudo nano /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent.json Paste the following basic configuration into the file. Customize the metrics and logs you want to collect by adding or modifying the metrics_collected, and other sections. Refer to the CloudWatch Agent documentation for detailed configuration options.\n{ \u0026#34;agent\u0026#34;: { \u0026#34;run_as_user\u0026#34;: \u0026#34;cwagent\u0026#34; }, \u0026#34;metrics\u0026#34;: { \u0026#34;namespace\u0026#34;: \u0026#34;WorkshopCWAgent\u0026#34;, \u0026#34;metrics_collected\u0026#34;: { \u0026#34;cpu\u0026#34;: { \u0026#34;resources\u0026#34;: [ \u0026#34;*\u0026#34; ], \u0026#34;measurement\u0026#34;: [ \u0026#34;cpu_usage_guest\u0026#34; ], \u0026#34;metrics_collection_interval\u0026#34;: 60, \u0026#34;totalcpu\u0026#34;: false }, \u0026#34;mem\u0026#34;: { \u0026#34;measurement\u0026#34;: [ \u0026#34;mem_used_percent\u0026#34; ], \u0026#34;metrics_collection_interval\u0026#34;: 60 } }, \u0026#34;append_dimensions\u0026#34;: { \u0026#34;ImageId\u0026#34;: \u0026#34;${aws:ImageId}\u0026#34;, \u0026#34;InstanceId\u0026#34;: \u0026#34;${aws:InstanceId}\u0026#34;, \u0026#34;InstanceType\u0026#34;: \u0026#34;${aws:InstanceType}\u0026#34;, \u0026#34;AutoScalingGroupName\u0026#34;: \u0026#34;${aws:AutoScalingGroupName}\u0026#34; }, \u0026#34;aggregation_dimensions\u0026#34;: [ [ \u0026#34;InstanceId\u0026#34; ] ] } } 2. Store configuration file in AWS Systems Manager Parameter Store Parameter Store allows you to securely store configuration and application data.\nNavigate to AWS Systems Manager then choose Parameter Store. Click on the Create parameter button to create a new parameter. Configure Parameter: The prefix of parameter name must be \u0026lsquo;AmazonCloudWatch-\u0026rsquo;.\nEnter a name for the parameter: AmazonCloudWatch-Agent-EC2-Configuration. Add description: CloudWatch Agent configuration. Choose the Standard parameter tier. For the parameter type, select String. For the data type, select text. Enter the configuration json in section 1 to Value. Click on Create parameter 3. Apply configuration -s option mean restart Cloudwatch Agent after configuring the agent configuration\nConfiguration file on the local sudo amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c file:/opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent.json Configuration file in the Systems Manager Parameter Store: sudo amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-Agent-EC2-Configuration With the installation and configuration of the CloudWatch Agent completed, we will configuring high-resolution metrics in the next step.\n"
+},
+{
+	"uri": "/2-preparation/2.2-create-public-subnet/",
+	"title": "Create public subnet",
+	"tags": [],
+	"description": "",
+	"content": "Create Public Subnet Click Subnets. Click Create subnet. At the Create subnet page. In the VPC ID section, click cw-agent-vpc. In the Subnet name field, enter cw-agent-public-subnet-01. In the Availability Zone section, select the first Availability zone. In the field IPv4 CIRD block enter 10.0.1.0/24. Scroll to the bottom of the page, click Create subnet.\nClick cw-agent-public-subnet-01.\nClick Actions. Click Edit subnet settings. Click Enable auto-assign public IPv4 address. Click Save. Click Internet Gateways. Click Create internet gateway. At the Create internet gateway page. In the Name tag field, enter cw-agent-igw. Click Create internet gateway. After successful creation, click Actions. Click Attach to VPC. At the Attach to VPC page. In the Available VPCs section, select cw-agent-vpc. Click Attach internet gateway. Check the successful attaching process as shown below. Next we will create a custom route table to assign to cw-agent-public-subnet-01. Click Route Tables. Click Create route table. At the Create route table page. In the Name field, enter cw-agent-public-rtb. In the VPC section, select cw-agent-vpc. Click Create route table. After creating the route table successfully. Click Edit routes. At the Edit routes page. Click Add route. In the Destination field, enter 0.0.0.0/0 In the Target section, select Internet Gateway and then select cw-agent-igw. Click Save changes. Click the Subnet associations tab. Click Edit subnet associations to proceed with the associate custom route table we just created in cw-agent-public-subnet-01. At the Edit subnet associations page. Click on cw-agent-public-subnet-01. Click Save associations. Check that the route table information has been associated with cw-agent-public-subnet-01 and the internet route information has been pointed to the Internet Gateway as shown below. Next step we will create the security group for EC2 instance.\n"
+},
+{
+	"uri": "/2-preparation/",
+	"title": "Preparing VPC and EC2",
+	"tags": [],
+	"description": "",
+	"content": "\rYou need to create 1 Linux instance on the public subnet to perform this lab.\nAmazon Web Services (AWS) offers a comprehensive set of tools to build and manage cloud infrastructure. In this guide, we will walk through the process of creating a Virtual Private Cloud (VPC) with 1 public subnet, then launching an Amazon Elastic Compute Cloud (EC2) instance located in the public subnet within the VPC, creating an IAM (Identity and Access Management) role for EC2 to send data to Amazon CloudWatch.\nThe architecture overview after you complete this step will be as follows:\nContent 2.1. Create VPC\n2.2. Create public subnet\n2.3. Create security group\n2.4. Create IAM role\n2.5. Create EC2 instance\n"
+},
+{
+	"uri": "/2-preparation/2.3-create-sec-group/",
+	"title": "Create security group",
+	"tags": [],
+	"description": "",
+	"content": "In this step, we will proceed to create the security groups used for our instances. As you can see, these security groups will need to open traditional ports to ssh like port 22.\nCreate security group for EC2 instance located in public subnet Go to VPC service management console Click Security Group. Click Create security group. In the Security group name field, enter EC2ServerSG. In the Description section, enter Security group for EC2 instance. In the VPC section, click the X to reselect the cw-agent-vpc you created for this lab. Configure Inbound rules In Inbound rules, click Add rule. Select Type: SSH and Source: My IP. My IP represents 1 public IPv4 address you are using (will change when you change network). Keep Outbound rule, drag the mouse to the bottom. Click Create security group. So we are done with creating the necessary security group for the EC2 instance.\n"
+},
+{
+	"uri": "/3-install-config-cwagent/",
+	"title": "Install and config CloudWatch Agent",
+	"tags": [],
+	"description": "",
+	"content": "In this step, we will install and config CloudWatch Agent which allows you to collect custom metrics and logs from your EC2 instances and on-premises servers and send them to Amazon CloudWatch for monitoring and analysis.\nContent 3.1. Install CloudWatch Agent\n3.2. Config CloudWatch Agent\n"
+},
+{
+	"uri": "/4-config-high-resolution-metrics/",
+	"title": "Config high resolution metrics",
+	"tags": [],
+	"description": "",
+	"content": "The metrics_collection_interval field specifies the time interval for the metrics collected, in seconds. By specifying a value of less than 60 for this field, the metrics are collected as high-resolution metrics.\nFor example, if your metrics should all be high-resolution and collected every 10 seconds, specify 10 as the value for metrics_collection_interval under the agent section as a global metrics collection interval.\n{ \u0026#34;agent\u0026#34;: { \u0026#34;metrics_collection_interval\u0026#34;: 10 } } Alternatively, the following example sets the cpu, ram, and all other metrics to be collected every 10 second.\n{ \u0026#34;agent\u0026#34;: { \u0026#34;run_as_user\u0026#34;: \u0026#34;cwagent\u0026#34;, \u0026#34;metrics_collection_interval\u0026#34;: 10 }, \u0026#34;metrics\u0026#34;: { \u0026#34;namespace\u0026#34;: \u0026#34;WorkshopCWAgent\u0026#34;, \u0026#34;metrics_collected\u0026#34;: { \u0026#34;cpu\u0026#34;: { \u0026#34;resources\u0026#34;: [ \u0026#34;*\u0026#34; ], \u0026#34;measurement\u0026#34;: [ \u0026#34;cpu_usage_guest\u0026#34; ], \u0026#34;metrics_collection_interval\u0026#34;: 10, \u0026#34;totalcpu\u0026#34;: false }, \u0026#34;mem\u0026#34;: { \u0026#34;measurement\u0026#34;: [ \u0026#34;mem_used_percent\u0026#34; ], \u0026#34;metrics_collection_interval\u0026#34;: 10 } }, \u0026#34;append_dimensions\u0026#34;: { \u0026#34;ImageId\u0026#34;: \u0026#34;${aws:ImageId}\u0026#34;, \u0026#34;InstanceId\u0026#34;: \u0026#34;${aws:InstanceId}\u0026#34;, \u0026#34;InstanceType\u0026#34;: \u0026#34;${aws:InstanceType}\u0026#34;, \u0026#34;AutoScalingGroupName\u0026#34;: \u0026#34;${aws:AutoScalingGroupName}\u0026#34; }, \u0026#34;aggregation_dimensions\u0026#34;: [ [ \u0026#34;InstanceId\u0026#34; ] ] } } Update CloudWatch Agent configuration Navigate to AWS Systems Manager then choose Parameter Store. Click on AmazonCloudWatch-Agent-EC2-Configuration parameter. Click on Edit. Enter the high-resolution metric configuration above into the Value field, then click on Save changes. Refetch and restart CloudWatch Agent configuration in EC2 Instance. sudo amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -s -c ssm:AmazonCloudWatch-Agent-EC2-Configuration Remember that any time you change the agent configuration on SSM Parameter Store, you must refetch and restart the configuration to have the changes take effect.\nHaving successfully configured high-resolution metrics, our next step involves the monitoring and analysis of these metrics.\n"
+},
+{
+	"uri": "/2-preparation/2.4-create-iam-role/",
+	"title": "Create IAM Role",
+	"tags": [],
+	"description": "",
+	"content": "Create IAM Role In this step, we will proceed to create IAM Role. In this IAM Role, the policy AmazonSSMManagedInstanceCore will be assigned, this is the policy that allows the EC2 server to communicate with the Session Manager to save the configuration of CloudWatch Agent.\nGo to IAM service administration interface\nIn the left navigation bar, click Roles, then click Create role.\nClick AWS service, then click EC2, and then click Next. In the Search box, enter CloudWatchAgentAdminPolicy and press Enter to search for this policy. Click the policy CloudWatchAgentAdminPolicy. Click Next Name the Role EC2CWAgentRole in Role Name. Click Create Role. So we are done with creating the necessary IAM role for the EC2 instance.\n"
+},
+{
+	"uri": "/2-preparation/2.5-create-ec2/",
+	"title": "Create EC2 instance",
+	"tags": [],
+	"description": "",
+	"content": " Go to EC2 service management console Click Instances. Click Launch instances. In the Name field, enter Server. On the Application and OS Images (Amazon Machine Image) section. Click on Amazon Machine Image (AMI) drop-down list then select AMI Amazon Linux 2 AMI. On the Instance Type section. Click on Instance type drop-down list then select t2.micro. On the Key pair (login) section. Click on Create new key pair. In the Key pair name field, enter server then click on Create key pair. On click Key pair name drop-down list then select server key pair. On the Network settings section. Click on Edit. Config the Network settings. On the Advanced details section. In the IAM instance profile drop-down list select the EC2CWAgentRole. On the Summary section. Click on Launch instance. The preparation of the VPC and EC2 instance for CloudWatch is now complete. Next step we will install and configuring Cloudwatch Agent in EC2 instance.\n"
+},
+{
+	"uri": "/5-monitor-and-analysis-in-cloudwatch/",
+	"title": "Monitor and analysis in CloudWatch",
+	"tags": [],
+	"description": "",
+	"content": " Navigate to AWS CloudWatch, then choose All metrics. On Custom namespaces section, click on WorkshopCWAgent. Click on InstanceId. Select RAM metrics. Select Metric name has value mem_used_percent. Then click on Graphed metrics. Choose Period value of 10 seconds. Choose a time interval of 3 minutes. The metric every 10 second. Config dashboard auto refresh every 10 seconds. Add to dashboard. Create new dashboard. Insert name, and click on Create. Click on Add to dashboard. Navigate to cw-agent-dashboard. You can choose to keep all these resources for the upcoming lab or proceed with the cleanup in the following step.\n"
+},
+{
+	"uri": "/6-cleanup/",
+	"title": "Clean up resources",
+	"tags": [],
+	"description": "",
+	"content": "We will take the following steps to delete the resources we created in this exercise.\nDelete EC2 instance Go to EC2 service management console Click Instances. Select server instance. Click Instance state. Click Terminate instance, then click Terminate to confirm. Delete IAM Role Go to IAM service management console Click Roles. In the search box, enter EC2CWAgentRole. Click to select EC2CWAgentRole. Click Delete, then enter the role name EC2CWAgentRole and click Delete to delete the role. Delete VPC Go to VPC service management console\nClick Your VPCs. Click on cw-agent-vpc. Click Actions. Click Delete VPC. In the confirm box, enter delete to confirm, click Delete to delete cw-agent-vpc and related resources.\n"
+},
+{
+	"uri": "/categories/",
+	"title": "Categories",
+	"tags": [],
+	"description": "",
+	"content": ""
+},
+{
+	"uri": "/tags/",
+	"title": "Tags",
+	"tags": [],
+	"description": "",
+	"content": ""
+}]
