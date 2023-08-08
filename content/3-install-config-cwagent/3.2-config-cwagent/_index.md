@@ -6,10 +6,6 @@ chapter : false
 pre : " <b> 3.2. </b> "
 ---
 
-{{% notice info %}}
-If you saved the configuration file on the local computer, enter the following command. Replace configuration-file-path with the path to the agent configuration file. This file is called config.json if you created it with the wizard, and might be called amazon-cloudwatch-agent.json if you created it manually.
-{{% /notice %}}
-
 #### 1. Create the CloudWatch Agent configuration file
 
 Create the CloudWatch Agent configuration file using your preferred text editor.
