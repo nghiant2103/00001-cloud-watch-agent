@@ -3,7 +3,7 @@ title : "Tạo EC2 instance"
 date : "`r Sys.Date()`"
 weight : 5
 chapter : false
-pre : " <b> 2.5 </b> "
+pre : "<b>2.5 </b>"
 ---
 
 1. Truy cập [EC2 service management console](https://console.aws.amazon.com/ec2/v2/home)

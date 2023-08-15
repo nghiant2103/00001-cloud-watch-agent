@@ -3,7 +3,7 @@ title : "Create security group"
 date : "`r Sys.Date()`"
 weight : 3
 chapter : false
-pre : " <b> 2.3 </b> "
+pre : "<b>2.3 </b>"
 ---
 
 In this step, we will proceed to create the security groups used for our instances. As you can see, these security groups will need to open traditional ports to **ssh** like port **22**.

@@ -3,7 +3,7 @@ title : "Install and config CloudWatch Agent"
 date : "`r Sys.Date()`"
 weight : 3
 chapter : false
-pre : " <b> 3. </b> "
+pre : "<b>3. </b>"
 ---
 
 In this step, we will install and config CloudWatch Agent which allows you to collect custom metrics and logs from your EC2 instances and on-premises servers and send them to Amazon CloudWatch for monitoring and analysis.

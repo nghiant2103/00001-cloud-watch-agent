@@ -3,7 +3,7 @@ title : "Tạo security group"
 date : "`r Sys.Date()`"
 weight : 3
 chapter : false
-pre : " <b> 2.3 </b> "
+pre : "<b>2.3 </b>"
 ---
 
 Trong bước này, chúng ta sẽ tiến hành tạo security group được sử dụng cho các instances của chúng ta. Như bạn có thể thấy, những security group này sẽ cần mở các cổng truyền thống cho **ssh** như cổng **22**.

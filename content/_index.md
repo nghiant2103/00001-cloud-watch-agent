@@ -1,7 +1,7 @@
 ---
 title : "CloudWatch Agent"
 date :  "`r Sys.Date()`" 
-weight : 1 
+weight : 1
 chapter : false
 ---
 # Configure Amazon CloudWatch Agent

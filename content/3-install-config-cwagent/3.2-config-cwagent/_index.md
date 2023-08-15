@@ -3,7 +3,7 @@ title : "Config CloudWatch Agent"
 date : "`r Sys.Date()`"
 weight : 2
 chapter : false
-pre : " <b> 3.2. </b> "
+pre : "<b>3.2. </b>"
 ---
 
 #### 1. Create the CloudWatch Agent configuration file

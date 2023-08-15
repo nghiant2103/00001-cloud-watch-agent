@@ -1,10 +1,10 @@
-+++
-title = "Clean up resources"
-date = 2023
-weight = 6
-chapter = false
-pre = "<b>6. </b>"
-+++
+---
+title : "Clean up resources"
+date : "`r Sys.Date()`"
+weight : 6
+chapter : false
+pre : "<b>6. </b>"
+---
 
 We will take the following steps to delete the resources we created in this exercise.
 

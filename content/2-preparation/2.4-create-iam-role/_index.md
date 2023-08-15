@@ -3,7 +3,7 @@ title : "Create IAM Role"
 date : "`r Sys.Date()`"
 weight : 4
 chapter : false
-pre : " <b> 2.4 </b> "
+pre : "<b>2.4 </b>"
 ---
 
 ### Create IAM Role

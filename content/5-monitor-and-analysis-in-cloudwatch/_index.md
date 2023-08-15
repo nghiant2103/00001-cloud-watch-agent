@@ -1,9 +1,9 @@
 ---
 title : "Monitor and analysis in CloudWatch"
-date :  "`r Sys.Date()`" 
-weight : 5 
+date : "`r Sys.Date()`"
+weight : 5
 chapter : false
-pre : " <b> 5. </b> "
+pre : "<b>5. </b>"
 ---
 
 1. Navigate to **AWS CloudWatch**, then choose **All metrics**.

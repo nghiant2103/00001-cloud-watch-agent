@@ -3,7 +3,7 @@ title : "Cấu hình phân giải cao"
 date : "`r Sys.Date()`"
 weight : 4
 chapter : false
-pre : " <b> 4. </b> "
+pre : "<b>4. </b>"
 ---
 
 Trường **metrics_collection_interval** chỉ định khoảng thời gian cho các metrics được thu thập, tính bằng giây. Bằng cách chỉ định giá trị nhỏ hơn 60 cho trường này, các metrics được thu thập dưới dạng **metrics phân giải cao**.

@@ -1,10 +1,10 @@
-+++
-title = "Dọn dẹp tài nguyên"
-date = 2023
-weight = 6
-chapter = false
-pre = "<b>6. </b>"
-+++
+---
+title : "Dọn dẹp tài nguyên"
+date : "`r Sys.Date()`"
+weight : 6
+chapter : false
+pre : "<b>6. </b>"
+---
 
 Chúng ta sẽ thực hiện các bước sau để xóa các tài nguyên mà chúng ta đã tạo trong bài lab này.
 

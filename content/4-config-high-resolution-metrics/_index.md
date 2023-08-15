@@ -3,7 +3,7 @@ title : "Config high resolution metrics"
 date : "`r Sys.Date()`"
 weight : 4
 chapter : false
-pre : " <b> 4. </b> "
+pre : "<b>4. </b>"
 ---
 
 The **metrics_collection_interval** field specifies the time interval for the metrics collected, in seconds. By specifying a value of less than 60 for this field, the metrics are collected as **high-resolution metrics**.
