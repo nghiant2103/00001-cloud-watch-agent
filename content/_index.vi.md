@@ -11,7 +11,7 @@ chapter : false
 
 Trong buổi thực hành này, bạn sẽ khám phá các khái niệm cơ bản và học cách cấu hình Amazon CloudWatch Agent để thu thập logs và metrics với độ phân giải cao từ các EC2 instance. Sau đó, bạn sẽ sử dụng CloudWatch để giám sát dữ liệu và nhật ký đã thu thập.
 
-Tôi đã tạo **video thực hành** cho workshop này và bạn có thể xem video đó bằng cách truy cập [Install and configure AWS CloudWatch Agent](http://https://www.youtube.com/watch?v=1zCDei_0RM4).
+Tôi đã tạo **video thực hành** cho workshop này và bạn có thể xem video đó bằng cách truy cập [Install and configure AWS CloudWatch Agent](https://youtu.be/1zCDei_0RM4).
 
 ![CloudWatch Agent](/images/arc-cw-agent-main.png) 
 

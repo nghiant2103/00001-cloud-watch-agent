@@ -10,7 +10,7 @@ chapter : false
 
 In this workshop, you will explore fundamental concepts and learn how to configure the Amazon CloudWatch Agent to collect high-resolution logs and metrics from EC2 instances. Afterward, you will use CloudWatch to monitor the collected data and logs.
 
-I've created a **hands-on video** for this workshop, and you can watch it by visiting [Install and configure AWS CloudWatch Agent](http://https://www.youtube.com/watch?v=1zCDei_0RM4).
+I've created a **hands-on video** for this workshop, and you can watch it by visiting [Install and configure AWS CloudWatch Agent](https://youtu.be/1zCDei_0RM4).
 
 ![CloudWatch Agent](/images/arc-cw-agent-main.png) 
 
